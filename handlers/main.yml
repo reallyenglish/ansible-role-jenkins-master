@@ -1,6 +1,19 @@
 ---
 
-- name: Restart jenkins-master
+- name: Create admin users
+  template:
+    src: basic-security.groovy
+    dest: "{{ jenkins_master_home }}/init.groovy.d/basic-security.groovy"
+  register: register_basic_security
+
+- name: Restart jenkins
   service:
-    name: jenkins-master
+    name: "{{ jenkins_master_service }}"
     state: restarted
+  notify: Wait for jenkins to listen on jenkins_master_port
+
+- name: Wait for jenkins to listen on jenkins_master_port
+  wait_for:
+    host: "{{ jenkins_master_hostname }}"
+    port: "{{ jenkins_master_port }}"
+    timeout: 300

@@ -1,0 +1,18 @@
+---
+
+- name: Create Jenkins init directory
+  file:
+    path: "{{ jenkins_master_home }}/init.groovy.d"
+    state: directory
+    owner: "{{ jenkins_master_user }}"
+    group: "{{ jenkins_master_group }}"
+
+- meta: flush_handlers
+
+- name: Restart Jenkins
+  service:
+    name: "{{ jenkins_master_service }}"
+    state: restarted
+  when:
+    - register_basic_security is defined
+    - register_basic_security.changed

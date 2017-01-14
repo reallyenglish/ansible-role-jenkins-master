@@ -1,5 +1,8 @@
 - hosts: localhost
   roles:
+    - reallyenglish.java
     - ansible-role-jenkins-master
   vars:
-    jenkins-master_config: ""
+    jenkins_master_plugins:
+      - git
+      - hipchat

@@ -1,6 +1,18 @@
 ---
 
+- name: Install curl
+  pkgng:
+    name: curl
+    state: present
+
 - name: Install jenkins-master
   pkgng:
-    name: jenkins-master
+    name: "{{ jenkins_master_package }}"
     state: present
+  notify: Create admin users
+
+- name: Create rc.conf/jenkins
+  template:
+    src: FreeBSD/rc.jenkins.j2
+    dest: /etc/rc.conf.d/jenkins
+  notify: Restart jenkins

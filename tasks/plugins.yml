@@ -1,0 +1,43 @@
+---
+
+- name: Create jenkins_master_updates_dir
+  file:
+    path: "{{ jenkins_master_updates_dir }}"
+    state: directory
+    owner: "{{ jenkins_master_user }}"
+    group: "{{ jenkins_master_group }}"
+
+- name: Download default.json for plugins
+  shell: curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > "{{ jenkins_master_updates_dir }}/default.json"
+  args:
+    creates: "{{ jenkins_master_updates_dir }}/default.json"
+  register: register_update_json
+
+- name: Set correct permission for default.json
+  file:
+    path: "{{ jenkins_master_updates_dir }}/default.json"
+    owner: "{{ jenkins_master_user }}"
+    group: "{{ jenkins_master_group }}"
+    mode: 0644
+  when: register_update_json.changed
+
+- name: Check if we're using a password file for authentication
+  stat:
+    path: "{{ jenkins_master_admin_password_file }}"
+  register: register_admin_password_file
+
+- name: Install Jenkins plugins using password.
+  command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ install-plugin {{ item }} --username {{ jenkins_master_admin_user }} --password {{ jenkins_master_admin_password }}"
+  args:
+    creates: "{{ jenkins_master_home }}/plugins/{{ item }}.jpi"
+  with_items: "{{ jenkins_master_plugins }}"
+  when: jenkins_master_admin_password != ""
+  notify: Restart jenkins
+
+- name: Install Jenkins plugins using password-file
+  command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ install-plugin {{ item }} --username {{ jenkins_master_admin_user }} --password-file {{ jenkins_master_admin_password_file }}"
+  args:
+    creates: "{{ jenkins_master_home }}/plugins/{{ item }}.jpi"
+  with_items: "{{ jenkins_master_plugins }}"
+  when: register_admin_password_file.stat.exists == True
+  notify: Restart jenkins

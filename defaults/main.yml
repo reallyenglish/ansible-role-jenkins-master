@@ -1,8 +1,20 @@
-jenkins-master_user: jenkins-master
-jenkins-master_group: jenkins-master
-jenkins-master_log_dir: /var/log/jenkins-master
-jenkins-master_db_dir: "{{ __jenkins-master_db_dir }}"
-jenkins-master_service: jenkins-master
-jenkins-master_conf_dir: "{{ __jenkins-master_conf_dir }}"
-jenkins-master_conf_file: "{{ __jenkins-master_conf_dir }}/jenkins-master.conf"
-jenkins-master_flags: ""
+jenkins_master_user: "{{ __jenkins_master_user }}"
+jenkins_master_group: "{{ __jenkins_master_group }}"
+jenkins_master_service: "{{ __jenkins_master_service }}"
+jenkins_master_home: "{{ __jenkins_master_home }}"
+jenkins_master_package: "{{ __jenkins_master_package }}"
+jenkins_master_updates_dir: "{{ jenkins_master_home }}/updates"
+
+jenkins_master_java_opts: "-Djenkins.install.runSetupWizard=false"
+jenkins_master_jenkins_opts: "{{ __jenkins_master_jenkins_opts }}"
+jenkins_master_hostname: 127.0.0.1
+jenkins_master_port: "{{ __jenkins_master_port }}"
+jenkins_master_url_prefix: "{{ __jenkins_master_url_prefix }}"
+jenkins_master_url: "http://{{ jenkins_master_hostname }}:{{ jenkins_master_port }}{{ jenkins_master_url_prefix }}"
+jenkins_master_connection_retries: 60
+jenkins_master_connection_delay: 5
+jenkins_master_cli_path: "{{ __jenkins_master_cli_path }}"
+jenkins_master_admin_password_file: ""
+jenkins_master_admin_user: admin
+jenkins_master_admin_password: password
+jenkins_master_plugins: []

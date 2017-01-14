@@ -1,2 +1,9 @@
-__jenkins-master_db_dir: /var/db/jenkins-master
-__jenkins-master_conf_dir: /usr/local/etc/jenkins-master
+__jenkins_master_user: jenkins
+__jenkins_master_group: jenkins
+__jenkins_master_service: jenkins
+__jenkins_master_home: /usr/local/jenkins
+__jenkins_master_package: jenkins
+__jenkins_master_cli_path: /usr/local/bin/jenkins-cli.jar
+__jenkins_master_url_prefix: "/jenkins"
+__jenkins_master_port: 8180
+__jenkins_master_jenkins_opts: "--webroot={{ __jenkins_master_home }}/war --httpPort={{ __jenkins_master_port }} --prefix={{ __jenkins_master_url_prefix }}"
