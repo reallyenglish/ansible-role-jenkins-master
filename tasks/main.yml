@@ -10,10 +10,9 @@
 - name: Start jenkins
   service:
     name: "{{ jenkins_master_service }}"
-    enabled: true
     state: started
 
-- name: Wait for Jenkins to start up before proceeding.
+- name: Wait for Jenkins to start
   shell: "curl -D - --silent --max-time 5 {{ jenkins_master_url }}/cli/"
   register: result
   until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)

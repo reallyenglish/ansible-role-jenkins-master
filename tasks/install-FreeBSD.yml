@@ -5,7 +5,7 @@
     name: curl
     state: present
 
-- name: Install jenkins-master
+- name: Install jenkins
   pkgng:
     name: "{{ jenkins_master_package }}"
     state: present
@@ -15,4 +15,10 @@
   template:
     src: FreeBSD/rc.jenkins.j2
     dest: /etc/rc.conf.d/jenkins
+    validate: sh -n %s
   notify: Restart jenkins
+
+- name: Enable jenkins
+  service:
+    name: "{{ jenkins_master_service }}"
+    enabled: yes
