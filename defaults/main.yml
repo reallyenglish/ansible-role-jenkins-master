@@ -1,0 +1,8 @@
+jenkins-master_user: jenkins-master
+jenkins-master_group: jenkins-master
+jenkins-master_log_dir: /var/log/jenkins-master
+jenkins-master_db_dir: "{{ __jenkins-master_db_dir }}"
+jenkins-master_service: jenkins-master
+jenkins-master_conf_dir: "{{ __jenkins-master_conf_dir }}"
+jenkins-master_conf_file: "{{ __jenkins-master_conf_dir }}/jenkins-master.conf"
+jenkins-master_flags: ""

@@ -1,0 +1,6 @@
+---
+
+- name: Install jenkins-master
+  pkgng:
+    name: jenkins-master
+    state: present

@@ -1,0 +1,6 @@
+---
+
+- name: Restart jenkins-master
+  service:
+    name: jenkins-master
+    state: restarted

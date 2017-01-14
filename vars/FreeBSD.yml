@@ -1,0 +1,2 @@
+__jenkins-master_db_dir: /var/db/jenkins-master
+__jenkins-master_conf_dir: /usr/local/etc/jenkins-master
