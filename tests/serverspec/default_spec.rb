@@ -5,15 +5,20 @@ package = "jenkins"
 service = "jenkins"
 user    = "jenkins"
 group   = "jenkins"
-ports   = [ 8180 ]
-log_file = "/var/log/jenkins.log"
-home    = "/usr/local/jenkins"
-cli     = "/usr/local/bin/jenkins-cli.jar"
-url     = "http://127.0.0.1:8180/jenkins"
-plugins = [ "git", "hipchat" ]
+ports   = [ 8080 ]
+log_file = "/var/log/jenkins/jenkins.log"
+home    = "/var/lib/jenkins"
+cli     = "/usr/bin/jenkins-cli.jar"
+url     = "http://127.0.0.1:8080/jenkins"
+plugins = [ "git", "hipchat", "matrix-project" ]
 
 case os[:family]
 when "freebsd"
+  ports   = [ 8180 ]
+  home    = "/usr/local/jenkins"
+  cli     = "/usr/local/bin/jenkins-cli.jar"
+  url     = "http://127.0.0.1:8180/jenkins"
+  log_file = "/var/log/jenkins.log"
 end
 
 describe package(package) do
@@ -28,8 +33,18 @@ case os[:family]
 when "freebsd"
   describe file("/etc/rc.conf.d/jenkins") do
     it { should be_file }
-    its(:content) { should match(/^jenkins_java_opts="#{ Regexp.escape("-Djenkins.install.runSetupWizard=false") }"$/) }
+    its(:content) { should match(/^jenkins_java_opts="#{ Regexp.escape("-Djava.awt.headless=true") } #{ Regexp.escape("-Djenkins.install.runSetupWizard=false") }"$/) }
     its(:content) { should match(/^jenkins_args="--webroot=#{ Regexp.escape("/usr/local/jenkins/war") } --httpPort=8180 --prefix=\/jenkins"$/) }
+  end
+
+when "centos"
+  describe file("/etc/sysconfig/jenkins") do
+    it { should be_file }
+    its(:content) { should match(/^JENKINS_HOME="#{ Regexp.escape(home) }"$/) }
+    its(:content) { should match(/^JENKINS_USER="jenkins"$/) }
+    its(:content) { should match(/^JENKINS_JAVA_OPTIONS="#{ Regexp.escape("-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false") }"$/) }
+    its(:content) { should match(/^JENKINS_PORT="8080"$/) }
+    its(:content) { should match(/^JENKINS_ARGS="--prefix=\/jenkins\s+"$/) }
   end
 end
 

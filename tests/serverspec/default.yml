@@ -3,6 +3,9 @@
     - reallyenglish.java
     - ansible-role-jenkins-master
   vars:
+    jenkins_master_url_prefix: /jenkins
+    jenkins_master_java_opts: -Djava.awt.headless=true -Djenkins.install.runSetupWizard=false
     jenkins_master_plugins:
+      - matrix-project
       - git
       - hipchat
