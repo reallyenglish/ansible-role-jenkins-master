@@ -34,7 +34,7 @@ when "freebsd"
   describe file("/etc/rc.conf.d/jenkins") do
     it { should be_file }
     its(:content) { should match(/^jenkins_java_opts="#{ Regexp.escape("-Djava.awt.headless=true") } #{ Regexp.escape("-Djenkins.install.runSetupWizard=false") }"$/) }
-    its(:content) { should match(/^jenkins_args="--webroot=#{ Regexp.escape("/usr/local/jenkins/war") } --httpPort=8180 --prefix=\/jenkins"$/) }
+    its(:content) { should match(/^jenkins_args="--prefix=\/jenkins --webroot=#{ Regexp.escape("/usr/local/jenkins/war") } --httpPort=8180"$/) }
   end
 when "ubuntu"
   describe file("/etc/default/jenkins") do

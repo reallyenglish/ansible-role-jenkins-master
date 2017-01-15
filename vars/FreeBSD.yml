@@ -6,4 +6,4 @@ __jenkins_master_package: jenkins
 __jenkins_master_cli_path: /usr/local/bin/jenkins-cli.jar
 __jenkins_master_url_prefix: "/jenkins"
 __jenkins_master_port: 8180
-__jenkins_master_jenkins_opts: "--webroot={{ __jenkins_master_home }}/war --httpPort={{ __jenkins_master_port }} --prefix={{ __jenkins_master_url_prefix }}"
+__jenkins_master_jenkins_opts: "--webroot={{ __jenkins_master_home }}/war --httpPort={{ __jenkins_master_port }}"

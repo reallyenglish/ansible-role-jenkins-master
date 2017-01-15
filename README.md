@@ -30,6 +30,20 @@ None
 | `jenkins_master_admin_password` | | `password` |
 | `jenkins_master_plugins` | plugins to install | `[]` |
 
+## Debian
+
+| Variable | Default |
+|----------|---------|
+| `__jenkins_master_user` | `jenkins` |
+| `__jenkins_master_group` | `jenkins` |
+| `__jenkins_master_service` | `jenkins` |
+| `__jenkins_master_home` | `/var/lib/jenkins` |
+| `__jenkins_master_package` | `jenkins` |
+| `__jenkins_master_cli_path` | `/usr/bin/jenkins-cli.jar` |
+| `__jenkins_master_url_prefix` | `/` |
+| `__jenkins_master_port` | `8080` |
+| `__jenkins_master_jenkins_opts` | `""` |
+
 ## FreeBSD
 
 | Variable | Default |
@@ -42,7 +56,21 @@ None
 | `__jenkins_master_cli_path` | `/usr/local/bin/jenkins-cli.jar` |
 | `__jenkins_master_url_prefix` | `/jenkins` |
 | `__jenkins_master_port` | `8180` |
-| `__jenkins_master_jenkins_opts` | `--webroot={{ __jenkins_master_home }}/war --httpPort={{ __jenkins_master_port }} --prefix={{ __jenkins_master_url_prefix }}` |
+| `__jenkins_master_jenkins_opts` | `--webroot={{ __jenkins_master_home }}/war --httpPort={{ __jenkins_master_port }}` |
+
+## RedHat
+
+| Variable | Default |
+|----------|---------|
+| `__jenkins_master_user` | `jenkins` |
+| `__jenkins_master_group` | `jenkins` |
+| `__jenkins_master_service` | `jenkins` |
+| `__jenkins_master_home` | `/var/lib/jenkins` |
+| `__jenkins_master_package` | `jenkins` |
+| `__jenkins_master_cli_path` | `/usr/bin/jenkins-cli.jar` |
+| `__jenkins_master_url_prefix` | `/` |
+| `__jenkins_master_port` | `8080` |
+| `__jenkins_master_jenkins_opts` | `""` |
 
 # Dependencies
 
