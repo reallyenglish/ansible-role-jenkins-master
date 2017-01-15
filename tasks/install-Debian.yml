@@ -1,0 +1,34 @@
+---
+
+- name: Install curl
+  package:
+    name: curl
+    state: installed
+
+- name: Add apt key for Jenkins
+  apt_key:
+    url: https://pkg.jenkins.io/debian/jenkins.io.key
+    state: present
+
+- name: Add apt repository for Jenkins
+  apt_repository:
+    repo: deb http://pkg.jenkins.io/debian-stable binary/
+    state: present
+
+- name: Install Jenkins
+  package:
+    name: jenkins
+    state: present
+  notify: Create admin users
+
+- name: Create /etc/default/jenkins
+  template:
+    src: Debian/default.jenkins.j2
+    dest: /etc/default/jenkins
+    validate: sh -n %s
+  notify: Restart jenkins
+
+- name: Enable Jenkins
+  service:
+    name: "{{ jenkins_master_service }}"
+    enabled: yes

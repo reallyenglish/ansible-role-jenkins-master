@@ -16,7 +16,7 @@ None
 | `jenkins_master_home` | Jenkins home | `{{ __jenkins_master_home }}` |
 | `jenkins_master_package` | package name | `{{ __jenkins_master_package }}` |
 | `jenkins_master_updates_dir` | path to updates dir | `{{ jenkins_master_home }}/updates` |
-| `jenkins_master_java_opts` | `JAVA_OPTS` to pass Jenkins | `-Djenkins.install.runSetupWizard=false` |
+| `jenkins_master_java_opts` | `JAVA_OPTS` to pass Jenkins | `["-Djava.awt.headless=true", "-Djenkins.install.runSetupWizard=false"]` |
 | `jenkins_master_jenkins_opts` | Jenkins options | `{{ __jenkins_master_jenkins_opts }}` |
 | `jenkins_master_hostname` | hostname | `127.0.0.1` |
 | `jenkins_master_port` | listen port | `{{ __jenkins_master_port }}` |

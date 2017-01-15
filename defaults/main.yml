@@ -5,7 +5,9 @@ jenkins_master_home: "{{ __jenkins_master_home }}"
 jenkins_master_package: "{{ __jenkins_master_package }}"
 jenkins_master_updates_dir: "{{ jenkins_master_home }}/updates"
 
-jenkins_master_java_opts: "-Djenkins.install.runSetupWizard=false"
+jenkins_master_java_opts:
+  - -Djava.awt.headless=true
+  - -Djenkins.install.runSetupWizard=false
 jenkins_master_jenkins_opts: "{{ __jenkins_master_jenkins_opts }}"
 jenkins_master_hostname: 127.0.0.1
 jenkins_master_port: "{{ __jenkins_master_port }}"

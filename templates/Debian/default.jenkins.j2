@@ -1,0 +1,14 @@
+NAME=jenkins
+JAVA=/usr/bin/java
+JAVA_ARGS="{{ jenkins_master_java_opts | join (' ') }}"
+PIDFILE=/var/run/$NAME/$NAME.pid
+JENKINS_USER=$NAME
+JENKINS_GROUP=$NAME
+JENKINS_WAR=/usr/share/$NAME/$NAME.war
+JENKINS_HOME=/var/lib/$NAME
+RUN_STANDALONE=true
+JENKINS_LOG=/var/log/$NAME/$NAME.log
+MAXOPENFILES=8192
+HTTP_PORT="{{ jenkins_master_port }}"
+PREFIX="{{ jenkins_master_url_prefix }}"
+JENKINS_ARGS="--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT {% if jenkins_master_url_prefix %}--prefix={{ jenkins_master_url_prefix }} {% endif %}{{ jenkins_master_jenkins_opts }}"

@@ -1,2 +1,2 @@
-jenkins_java_opts="{{ jenkins_master_java_opts }}"
+jenkins_java_opts="{{ jenkins_master_java_opts | join(' ') }}"
 jenkins_args="{{ jenkins_master_jenkins_opts }}"

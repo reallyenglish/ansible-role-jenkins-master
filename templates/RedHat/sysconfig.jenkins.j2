@@ -1,7 +1,7 @@
 JENKINS_HOME="{{ jenkins_master_home }}"
 JENKINS_JAVA_CMD=""
 JENKINS_USER="{{ jenkins_master_user }}"
-JENKINS_JAVA_OPTIONS="{{ jenkins_master_java_opts }}"
+JENKINS_JAVA_OPTIONS="{{ jenkins_master_java_opts | join (' ') }}"
 JENKINS_PORT="{{ jenkins_master_port }}"
 JENKINS_LISTEN_ADDRESS=""
 JENKINS_HTTPS_PORT=""

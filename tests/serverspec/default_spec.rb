@@ -36,7 +36,13 @@ when "freebsd"
     its(:content) { should match(/^jenkins_java_opts="#{ Regexp.escape("-Djava.awt.headless=true") } #{ Regexp.escape("-Djenkins.install.runSetupWizard=false") }"$/) }
     its(:content) { should match(/^jenkins_args="--webroot=#{ Regexp.escape("/usr/local/jenkins/war") } --httpPort=8180 --prefix=\/jenkins"$/) }
   end
-
+when "ubuntu"
+  describe file("/etc/default/jenkins") do
+    it { should be_file }
+    its(:content) { should match(/^JAVA_ARGS="#{ Regexp.escape("-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false") }"$/) }
+    its(:content) { should match(/^HTTP_PORT="8080"$/) }
+    its(:content) { should match(/^JENKINS_ARGS="--webroot=#{ Regexp.escape("/var/cache/$NAME/war") } --httpPort=\$HTTP_PORT --prefix=\/jenkins\s*"$/) }
+  end
 when "centos"
   describe file("/etc/sysconfig/jenkins") do
     it { should be_file }
@@ -89,7 +95,8 @@ end
 
 describe command("java -jar #{ cli } -s #{ url } list-plugins") do
   its(:exit_status) { should eq 0 }
-  its(:stdout) { should match(/^git\s+/) }
-  its(:stdout) { should match(/^hipchat\s+/) }
+  plugins.each do |p|
+    its(:stdout) { should match(/^#{ p }\s+/) }
+  end
   its(:stderr) { should match(/^$/) }
 end
