@@ -43,7 +43,7 @@ when "ubuntu"
     its(:content) { should match(/^HTTP_PORT="8080"$/) }
     its(:content) { should match(/^JENKINS_ARGS="--webroot=#{ Regexp.escape("/var/cache/$NAME/war") } --httpPort=\$HTTP_PORT --prefix=\/jenkins\s*"$/) }
   end
-when "centos"
+when "redhat"
   describe file("/etc/sysconfig/jenkins") do
     it { should be_file }
     its(:content) { should match(/^JENKINS_HOME="#{ Regexp.escape(home) }"$/) }
