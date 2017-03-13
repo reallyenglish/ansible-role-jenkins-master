@@ -16,3 +16,16 @@
   when:
     - register_basic_security is defined
     - register_basic_security.changed
+
+- name: Create directory to store ssh key
+  file:
+    path: "{{ jenkins_master_home }}/.ssh"
+    state: directory
+    owner: "{{ jenkins_master_user }}"
+    group: "{{ jenkins_master_group }}"
+    mode: 0700
+
+- name: Create ssh key
+  command: sudo -u "{{ jenkins_master_user }}" ssh-keygen -f {{ jenkins_master_home }}/.ssh/id_rsa -q -N "{{ jenkins_master_ssh_passphrase }}"
+  args:
+    creates: "{{ jenkins_master_home }}/.ssh/id_rsa"

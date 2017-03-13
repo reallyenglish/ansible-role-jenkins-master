@@ -29,6 +29,7 @@ None
 | `jenkins_master_admin_user` | | `admin` |
 | `jenkins_master_admin_password` | | `password` |
 | `jenkins_master_plugins` | plugins to install | `[]` |
+| `jenkins_master_ssh_passphrase` | passphrase of ssh key | `""` |
 
 ## Debian
 

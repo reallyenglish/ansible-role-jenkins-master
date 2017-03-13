@@ -11,6 +11,7 @@ home    = "/var/lib/jenkins"
 cli     = "/usr/bin/jenkins-cli.jar"
 url     = "http://127.0.0.1:8080/jenkins"
 plugins = [ "git", "hipchat", "matrix-project" ]
+ssh_passphrase = "passphrase"
 
 case os[:family]
 when "freebsd"
@@ -73,6 +74,37 @@ end
 describe file("#{ home }/init.groovy.d") do
   it { should be_directory }
   it { should be_mode 755 }
+end
+
+describe file("#{ home }/.ssh") do
+  it { should be_directory }
+  it { should be_mode 700 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
+end
+
+describe file("#{ home }/.ssh/id_rsa") do
+  it { should be_file }
+  it { should be_mode 600 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
+end
+
+describe file("#{ home }/.ssh/id_rsa.pub") do
+  it { should be_file }
+  it { should be_mode 644 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
+end
+
+describe command("ssh-keygen -lf #{ home }/.ssh/id_rsa.pub") do
+  its(:exit_status) { should eq 0 }
+  its(:stdout) { should match(/^2048\s+.*\(RSA\)$/) }
+  its(:stderr) { should match(/^$/) }
+end
+
+describe command("ssh-keygen -p -P #{ssh_passphrase} -N #{ssh_passphrase}2 -f #{ home }/.ssh/id_rsa") do
+  its(:exit_status) { should eq 0 }
 end
 
 describe file("#{ home }/updates") do
