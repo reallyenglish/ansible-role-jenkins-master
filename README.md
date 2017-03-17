@@ -30,6 +30,7 @@ None
 | `jenkins_master_admin_password` | | `password` |
 | `jenkins_master_plugins` | plugins to install | `[]` |
 | `jenkins_master_ssh_passphrase` | passphrase of ssh key | `""` |
+| `jenkins_master_ssh_private_key` | ssh private key | `""` |
 
 ## Debian
 
@@ -86,11 +87,19 @@ dependencies:
 - hosts: localhost
   roles:
     - reallyenglish.java
+    - reallyenglish.apt-repo
     - ansible-role-jenkins-master
+  vars_files:
+    - jenkins_master_ssh_private_key.yml
   vars:
+    jenkins_master_url_prefix: /jenkins
     jenkins_master_plugins:
+      - matrix-project
       - git
       - hipchat
+    apt_repo_to_add:
+      - ppa:webupd8team/java
+    jenkins_master_ssh_passphrase: "passphrase"
 ```
 
 # License

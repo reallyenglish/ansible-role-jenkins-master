@@ -12,6 +12,7 @@ cli     = "/usr/bin/jenkins-cli.jar"
 url     = "http://127.0.0.1:8080/jenkins"
 plugins = [ "git", "hipchat", "matrix-project" ]
 ssh_passphrase = "passphrase"
+ssh_checksum = "2048 SHA256:L5L3cuQABEnrDP+xNRz9yzAtU9cicM9O0rJTpkMWtpE #{user}@#{host_inventory['fqdn']} (RSA)"
 
 case os[:family]
 when "freebsd"
@@ -20,6 +21,10 @@ when "freebsd"
   cli     = "/usr/local/bin/jenkins-cli.jar"
   url     = "http://127.0.0.1:8180/jenkins"
   log_file = "/var/log/jenkins.log"
+when "ubuntu"
+  ssh_checksum = "2048 27:e7:34:1a:33:48:c5:16:df:1c:ce:dc:80:78:39:5f  #{user}@#{host_inventory['fqdn']} (RSA)" if Gem::Version.new(os[:release]) <= Gem::Version.new("14.04")
+when "redhat"
+  ssh_checksum = "2048 27:e7:34:1a:33:48:c5:16:df:1c:ce:dc:80:78:39:5f  #{user}@#{host_inventory['fqdn']} (RSA)" if Gem::Version.new(os[:release]) <= Gem::Version.new("7.3.1611")
 end
 
 describe package(package) do
@@ -97,13 +102,19 @@ describe file("#{ home }/.ssh/id_rsa.pub") do
   it { should be_grouped_into group }
 end
 
-describe command("ssh-keygen -lf #{ home }/.ssh/id_rsa.pub") do
+describe command("ssh-keygen -lf #{ home }/.ssh/id_rsa") do
   its(:exit_status) { should eq 0 }
-  its(:stdout) { should match(/^2048\s+.*\(RSA\)$/) }
+  its(:stdout) { should match(/^#{Regexp.escape(ssh_checksum)}$/) }
   its(:stderr) { should match(/^$/) }
 end
 
-describe command("ssh-keygen -p -P #{ssh_passphrase} -N #{ssh_passphrase}2 -f #{ home }/.ssh/id_rsa") do
+describe command("ssh-keygen -lf #{ home }/.ssh/id_rsa.pub") do
+  its(:exit_status) { should eq 0 }
+  its(:stdout) { should match(/^#{Regexp.escape(ssh_checksum)}$/) }
+  its(:stderr) { should match(/^$/) }
+end
+
+describe command("ssh-keygen -p -P #{ssh_passphrase} -N #{ssh_passphrase} -f #{ home }/.ssh/id_rsa") do
   its(:exit_status) { should eq 0 }
 end
 
