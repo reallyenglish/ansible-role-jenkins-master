@@ -40,3 +40,4 @@
     state: absent
 
 - include: plugins.yml
+- include: credential.yml

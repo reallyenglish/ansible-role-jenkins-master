@@ -33,6 +33,7 @@
     owner: "{{ jenkins_master_user }}"
     group: "{{ jenkins_master_group }}"
     validate: openssl rsa -noout -check -passin pass:{{ jenkins_master_ssh_passphrase }} -in %s
+  register: register_jenkins_master_ssh_private_key
 
 - name: Create pem for ssh public key
   command: openssl rsa -pubout -passin pass:{{ jenkins_master_ssh_passphrase }} -in {{ jenkins_master_home }}/.ssh/id_rsa -out /tmp/jenkins_master_id_rsa_pub.pem

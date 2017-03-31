@@ -32,7 +32,7 @@
     creates: "{{ jenkins_master_home }}/plugins/{{ item }}.jpi"
   with_items: "{{ jenkins_master_plugins }}"
   when: jenkins_master_admin_password != ""
-  notify: Restart jenkins
+  register: register_install_jenkins_plugins_password
 
 - name: Install Jenkins plugins using password-file
   command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ install-plugin {{ item }} --username {{ jenkins_master_admin_user }} --password-file {{ jenkins_master_admin_password_file }}"
@@ -40,4 +40,23 @@
     creates: "{{ jenkins_master_home }}/plugins/{{ item }}.jpi"
   with_items: "{{ jenkins_master_plugins }}"
   when: register_admin_password_file.stat.exists == True
-  notify: Restart jenkins
+  register: register_install_jenkins_plugins_password_file
+
+- name: Restart Jenkins
+  service:
+    name: "{{ jenkins_master_service }}"
+    state: restarted
+  when:
+    - (register_install_jenkins_plugins_password is defined and register_install_jenkins_plugins_password.changed) or (register_install_jenkins_plugins_password_file is defined and register_install_jenkins_plugins_password_file.changed)
+  register: register_restart_jenkins_after_plugin
+
+- name: Wait for Jenkins to start
+  shell: "curl -D - --silent --max-time 5 {{ jenkins_master_url }}/cli/"
+  register: result
+  until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
+  retries: "{{ jenkins_master_connection_retries }}"
+  delay: "{{ jenkins_master_connection_delay }}"
+  changed_when: false
+  when:
+    - register_restart_jenkins_after_plugin is defined
+    - register_restart_jenkins_after_plugin.changed
