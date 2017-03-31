@@ -10,7 +10,7 @@ log_file = '/var/log/jenkins/jenkins.log'
 home    = '/var/lib/jenkins'
 cli     = '/usr/bin/jenkins-cli.jar'
 url     = 'http://127.0.0.1:8080/jenkins'
-plugins = ['git', 'hipchat', 'matrix-project']
+plugins = ['git', 'hipchat', 'matrix-project', 'ssh-slaves']
 jenkins_java_opts =
   '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
 jenkins_args =
@@ -19,6 +19,10 @@ ssh_passphrase = 'passphrase'
 ssh_checksum =
   "2048 SHA256:L5L3cuQABEnrDP+xNRz9yzAtU9cicM9O0rJTpkMWtpE\
  #{user}@#{host_inventory['fqdn']} (RSA)"
+nodes = [
+  { name: 'slave1', remotefs: '/usr/local/jenkins', host: '192.168.33.12' },
+  { name: 'slave2', remotefs: '/usr/local/jenkins', host: '192.168.33.13' }
+]
 
 case os[:family]
 when 'freebsd'
@@ -195,4 +199,17 @@ end
 
 describe file("#{home}/credentials.xml") do
   its(:content) { should match(/<passphrase>.*<\/passphrase>$/) }
+end
+
+nodes.each do |node|
+  describe command(
+    "java -jar #{cli} -s #{url} get-node #{node[:name]}\
+     --username admin --password password"
+  ) do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(%r{<name>#{node[:name]}</name>}) }
+    its(:stdout) { should match(%r{<remoteFS>#{node[:remotefs]}</remoteFS>}) }
+    its(:stdout) { should match(%r{<host>#{node[:host]}</host>}) }
+    its(:stderr) { should match(/^$/) }
+  end
 end

@@ -31,6 +31,7 @@ None
 | `jenkins_master_plugins` | plugins to install | `[]` |
 | `jenkins_master_ssh_passphrase` | passphrase of ssh key | `""` |
 | `jenkins_master_ssh_private_key` | ssh private key | `""` |
+| `jenkins_master_nodes` | slave nodes | `[]` |
 
 ## Debian
 
@@ -100,6 +101,13 @@ dependencies:
     apt_repo_to_add:
       - ppa:webupd8team/java
     jenkins_master_ssh_passphrase: "passphrase"
+    jenkins_master_nodes:
+      - name: slave1
+        remotefs: /usr/local/jenkins
+        host: 192.168.33.12
+      - name: slave2
+        remotefs: /usr/local/jenkins
+        host: 192.168.33.13
 ```
 
 # License

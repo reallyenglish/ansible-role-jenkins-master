@@ -1,0 +1,52 @@
+- name: Check nodes
+  command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ get-node {{ item.name }} --username {{ jenkins_master_admin_user }} --password {{ jenkins_master_admin_password }}"
+  register: register_jenkins_master_nodes
+  failed_when: register_jenkins_master_nodes.rc not in [0, 3]
+  changed_when: False
+  with_items: "{{ jenkins_master_nodes }}"
+
+- name: Create nodes
+  shell: |
+    echo '       
+      <?xml version="1.0" encoding="UTF-8"?>
+      <slave>
+        <name>{{ item.item.name }}</name>
+        <description></description>
+        <remoteFS>{{ item.item.remotefs }}</remoteFS>
+        <numExecutors>1</numExecutors>
+        <mode>NORMAL</mode>
+        <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+        <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves">
+          <host>{{ item.item.host }}</host>
+          <port>22</port>
+          <credentialsId>{{ register_jenkins_master_credential.stdout.split(' ') | first }}</credentialsId>
+          <maxNumRetries>0</maxNumRetries>
+          <retryWaitTime>0</retryWaitTime>
+          <sshHostKeyVerificationStrategy class="hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy"/>
+        </launcher>
+        <label></label>
+        <nodeProperties/>
+      </slave>
+         ' | java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ create-node  --username {{ jenkins_master_admin_user }} --password {{ jenkins_master_admin_password }}
+  when: item.rc != 0
+  with_items: "{{ register_jenkins_master_nodes.results }}"
+  register: register_jenkins_master_create_nodes
+
+- name: Restart Jenkins
+  service:
+    name: "{{ jenkins_master_service }}"
+    state: restarted
+  when:
+    - register_jenkins_master_create_nodes.changed
+  register: register_restart_jenkins_after_nodes
+
+- name: Wait for Jenkins to start
+  shell: "curl -D - --silent --max-time 5 {{ jenkins_master_url }}/cli/"
+  register: result
+  until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
+  retries: "{{ jenkins_master_connection_retries }}"
+  delay: "{{ jenkins_master_connection_delay }}"
+  changed_when: false
+  when:
+    - register_restart_jenkins_after_nodes is defined
+    - register_restart_jenkins_after_nodes.changed

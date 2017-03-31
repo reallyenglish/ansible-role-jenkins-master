@@ -41,3 +41,4 @@
 
 - include: plugins.yml
 - include: credential.yml
+- include: nodes.yml
