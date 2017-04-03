@@ -20,8 +20,12 @@ ssh_checksum =
   "2048 SHA256:L5L3cuQABEnrDP+xNRz9yzAtU9cicM9O0rJTpkMWtpE\
  #{user}@#{host_inventory['fqdn']} (RSA)"
 nodes = [
-  { name: 'slave1', remotefs: '/usr/local/jenkins', host: '192.168.33.12' },
-  { name: 'slave2', remotefs: '/usr/local/jenkins', host: '192.168.33.13' }
+  { name: 'slave1',
+    remotefs: '/usr/local/jenkins',
+    host: 'slave1.example.com' },
+  { name: 'slave2',
+    remotefs: '/usr/local/jenkins',
+    host: '192.168.33.13' }
 ]
 
 case os[:family]
@@ -198,7 +202,7 @@ describe command(
 end
 
 describe file("#{home}/credentials.xml") do
-  its(:content) { should match(/<passphrase>.*<\/passphrase>$/) }
+  its(:content) { should match(%r{<passphrase>.*</passphrase>$}) }
 end
 
 nodes.each do |node|

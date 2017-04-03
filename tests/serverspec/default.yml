@@ -18,7 +18,7 @@
     jenkins_master_nodes:
       - name: slave1
         remotefs: /usr/local/jenkins
-        host: 192.168.33.12
+        host: slave1.example.com
       - name: slave2
         remotefs: /usr/local/jenkins
         host: 192.168.33.13
