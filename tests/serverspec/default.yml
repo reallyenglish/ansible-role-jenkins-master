@@ -11,6 +11,14 @@
       - matrix-project
       - git
       - hipchat
+      - ssh-slaves
     apt_repo_to_add:
       - ppa:webupd8team/java
     jenkins_master_ssh_passphrase: "passphrase"
+    jenkins_master_nodes:
+      - name: slave1
+        remotefs: /usr/local/jenkins
+        host: slave1.example.com
+      - name: slave2
+        remotefs: /usr/local/jenkins
+        host: 192.168.33.13
