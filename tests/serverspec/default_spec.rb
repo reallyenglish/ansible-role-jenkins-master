@@ -183,3 +183,16 @@ describe command("java -jar #{cli} -s #{url} list-plugins") do
   end
   its(:stderr) { should match(/^$/) }
 end
+
+describe command(
+  "java -jar #{cli} -s #{url} list-credentials\
+  'SystemCredentialsProvider::SystemContextResolver::jenkins'\
+   --username admin --password password"
+) do
+  its(:exit_status) { should eq 0 }
+  its(:stdout) { should match(/^[0-9a-f]+[-0-9a-f]+[0-9a-f]+\s+#{user}$/) }
+end
+
+describe file("#{home}/credentials.xml") do
+  its(:content) { should match(/<passphrase>.*<\/passphrase>$/) }
+end
