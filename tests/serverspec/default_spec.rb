@@ -214,6 +214,12 @@ nodes.each do |node|
     its(:stdout) { should match(%r{<name>#{node[:name]}</name>}) }
     its(:stdout) { should match(%r{<remoteFS>#{node[:remotefs]}</remoteFS>}) }
     its(:stdout) { should match(%r{<host>#{node[:host]}</host>}) }
+    its(:stdout) do
+      should match(
+        %r{<credentialsId>[0-9a-f]+[-0-9a-f]+[0-9a-f]+</credentialsId>}
+      )
+    end
+
     its(:stderr) { should match(/^$/) }
   end
 end
