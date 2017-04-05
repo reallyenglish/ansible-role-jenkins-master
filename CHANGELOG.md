@@ -1,3 +1,8 @@
+## Release 1.0.3
+
+* e503b8a [bugfix] fix empty credential id
+* 0bde6b3 a workaround to solve the schema version issue
+
 ## Release 1.0.2
 
 * 603edf5 add explanation of `jenkins_master_nodes`
