@@ -19,7 +19,7 @@
         <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves">
           <host>{{ item.item.host }}</host>
           <port>22</port>
-          <credentialsId>{{ register_jenkins_master_credential.stdout.split(' ') | first }}</credentialsId>
+          <credentialsId>{{ register_jenkins_master_credential_id.stdout.split(' ') | first }}</credentialsId>
           <maxNumRetries>0</maxNumRetries>
           <retryWaitTime>0</retryWaitTime>
           <sshHostKeyVerificationStrategy class="hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy"/>
