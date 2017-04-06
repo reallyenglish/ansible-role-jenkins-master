@@ -1,6 +1,5 @@
 - hosts: localhost
   roles:
-    - workaround_pkg
     - reallyenglish.java
     - reallyenglish.apt-repo
     - ansible-role-jenkins-master
