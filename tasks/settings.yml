@@ -39,6 +39,7 @@
   shell: openssl rsa -pubout -passin pass:{{ jenkins_master_ssh_passphrase }} -in {{ jenkins_master_home }}/.ssh/id_rsa | ssh-keygen -i -m pkcs8 -f /dev/stdin
   register: register_jenkins_master_ssh_public_key
   changed_when: False
+  always_run: yes
 
 - name: Create ssh public key
   template:

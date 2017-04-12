@@ -4,6 +4,7 @@
   failed_when: register_jenkins_master_nodes.rc not in [0, 3]
   changed_when: False
   with_items: "{{ jenkins_master_nodes }}"
+  always_run: yes
 
 - name: Create nodes
   shell: |
