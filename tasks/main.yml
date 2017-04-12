@@ -19,15 +19,13 @@
   retries: "{{ jenkins_master_connection_retries }}"
   delay: "{{ jenkins_master_connection_delay }}"
   changed_when: false
+  always_run: yes
 
 - name: Download jenkins-cli
   get_url:
     url: "{{ jenkins_master_url }}/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_master_cli_path }}"
   register: register_get_url_jar
-  until: "'OK' in register_get_url_jar.msg or 'file already exists' in register_get_url_jar.msg"
-  retries: 5
-  delay: 10
 
 - name: Set exec bit on jenkins_master_cli_path
   file:
