@@ -1,6 +1,5 @@
 - hosts: localhost
   roles:
-    - workaround_pkg
     - reallyenglish.java
     - reallyenglish.apt-repo
     - ansible-role-jenkins-master
@@ -23,3 +22,4 @@
       - name: slave2
         remotefs: /usr/local/jenkins
         host: 192.168.33.13
+    jenkins_master_port: 8280

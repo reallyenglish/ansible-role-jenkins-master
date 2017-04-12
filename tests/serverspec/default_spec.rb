@@ -5,16 +5,16 @@ package = 'jenkins'
 service = 'jenkins'
 user    = 'jenkins'
 group   = 'jenkins'
-ports   = [8080]
+port    = 8280
 log_file = '/var/log/jenkins/jenkins.log'
 home    = '/var/lib/jenkins'
 cli     = '/usr/bin/jenkins-cli.jar'
-url     = 'http://127.0.0.1:8080/jenkins'
+url     = "http://127.0.0.1:#{port}/jenkins"
 plugins = ['git', 'hipchat', 'matrix-project', 'ssh-slaves']
 jenkins_java_opts =
   '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
 jenkins_args =
-  '"--prefix=/jenkins --webroot=/usr/local/jenkins/war --httpPort=8180"'
+  "\"--prefix=/jenkins --webroot=/usr/local/jenkins/war --httpPort=#{port}\""
 ssh_passphrase = 'passphrase'
 ssh_checksum =
   "2048 SHA256:L5L3cuQABEnrDP+xNRz9yzAtU9cicM9O0rJTpkMWtpE\
@@ -30,10 +30,8 @@ nodes = [
 
 case os[:family]
 when 'freebsd'
-  ports   = [8180]
   home    = '/usr/local/jenkins'
   cli     = '/usr/local/bin/jenkins-cli.jar'
-  url     = 'http://127.0.0.1:8180/jenkins'
   log_file = '/var/log/jenkins.log'
 when 'ubuntu'
   jenkins_args =
@@ -83,7 +81,7 @@ when 'ubuntu'
         /^JAVA_ARGS="#{ Regexp.escape(jenkins_java_opts) }"$/
       )
     end
-    its(:content) { should match(/^HTTP_PORT="8080"$/) }
+    its(:content) { should match(/^HTTP_PORT="#{port}"$/) }
     its(:content) do
       should match(
         /^JENKINS_ARGS="#{Regexp.escape(jenkins_args)}\s*"$/
@@ -100,7 +98,7 @@ when 'redhat'
         /^JENKINS_JAVA_OPTIONS="#{ Regexp.escape(jenkins_java_opts) }"$/
       )
     end
-    its(:content) { should match(/^JENKINS_PORT="8080"$/) }
+    its(:content) { should match(/^JENKINS_PORT="#{port}"$/) }
     its(:content) { should match(%r{^JENKINS_ARGS="--prefix=/jenkins\s+"$}) }
   end
 end
@@ -110,10 +108,8 @@ describe service(service) do
   it { should be_enabled }
 end
 
-ports.each do |p|
-  describe port(p) do
-    it { should be_listening }
-  end
+describe port(port) do
+  it { should be_listening }
 end
 
 describe file(cli) do
