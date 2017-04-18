@@ -1,3 +1,8 @@
+## Release 1.0.5
+
+* 8c3f96f [bugfix] do not log passphrase given to openssl
+* c22fce1 [bugfix] do not log password given to jenkins cli
+
 ## Release 1.0.4
 
 * 68b4390 [bugfix] fix failures in ansible-playbook -CD
