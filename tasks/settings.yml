@@ -40,6 +40,7 @@
   register: register_jenkins_master_ssh_public_key
   changed_when: False
   always_run: yes
+  no_log: True
 
 - name: Create ssh public key
   template:
