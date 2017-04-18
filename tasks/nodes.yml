@@ -5,6 +5,7 @@
   changed_when: False
   with_items: "{{ jenkins_master_nodes }}"
   always_run: yes
+  no_log: True
 
 - name: Create nodes
   shell: |
@@ -32,6 +33,7 @@
   when: item.rc != 0
   with_items: "{{ register_jenkins_master_nodes.results }}"
   register: register_jenkins_master_create_nodes
+  no_log: True
 
 - name: Restart Jenkins
   service:
