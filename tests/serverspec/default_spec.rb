@@ -22,10 +22,12 @@ ssh_checksum =
 nodes = [
   { name: "slave1",
     remotefs: "/usr/local/jenkins",
-    host: "slave1.example.com" },
+    host: "slave1.example.com",
+    labels: %w(label1 label2) },
   { name: "slave2",
     remotefs: "/usr/local/jenkins",
-    host: "192.168.33.13" }
+    host: "192.168.33.13",
+    labels: %w(label1 label2) }
 ]
 
 case os[:family]
@@ -215,7 +217,9 @@ nodes.each do |node|
         %r{<credentialsId>[0-9a-f]+[-0-9a-f]+[0-9a-f]+</credentialsId>}
       )
     end
-
+    node[:labels].each do |label|
+      its(:stdout) { should match(%r{<label>.*#{label}.*</label>}) }
+    end
     its(:stderr) { should match(/^$/) }
   end
 end
