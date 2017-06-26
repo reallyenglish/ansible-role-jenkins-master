@@ -35,7 +35,7 @@ when "freebsd"
   home    = "/usr/local/jenkins"
   cli     = "/usr/local/bin/jenkins-cli.jar"
   log_file = "/var/log/jenkins.log"
-  # TODO workaround for #31
+  # TODO: workaround for #31
   # remove this when the newer package which fixes the issue is released
   plugins = %w(git-client hipchat matrix-project ssh-slaves)
 when "ubuntu"
