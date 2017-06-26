@@ -10,7 +10,7 @@ log_file = "/var/log/jenkins/jenkins.log"
 home    = "/var/lib/jenkins"
 cli     = "/usr/bin/jenkins-cli.jar"
 url     = "http://127.0.0.1:#{port}/jenkins"
-plugins = ["git", "hipchat", "matrix-project", "ssh-slaves"]
+plugins = %w(git hipchat matrix-project ssh-slaves)
 jenkins_java_opts =
   "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
 jenkins_args =
@@ -35,6 +35,9 @@ when "freebsd"
   home    = "/usr/local/jenkins"
   cli     = "/usr/local/bin/jenkins-cli.jar"
   log_file = "/var/log/jenkins.log"
+# XXX workaround for #31
+# remove this when the newer package which fixes the issue is released
+  plugins = %w(git-client hipchat matrix-project ssh-slaves)
 when "ubuntu"
   jenkins_args =
     "--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT\
