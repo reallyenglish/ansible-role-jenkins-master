@@ -35,11 +35,13 @@ None
 
 ## `jenkins_master_nodes`
 array of dictionaries for slave nodes
-```yaml
-- name: slave1                   # string to identify the node
-  remotefs: /usr/local/jenkins   # home directory of jenkins user on the node
-  host: slave1.example.com       # FQDN or IP address
-```
+
+| Key | Value | Mandatory |
+|-|-|
+| name | string to identify the node | yes |
+| remotefs | home directory of jenkins user on the node | yes |
+| host | FQDN or IP address | yes |
+| labels | array of the label | no |
 
 ## Debian
 
@@ -113,9 +115,15 @@ dependencies:
       - name: slave1
         remotefs: /usr/local/jenkins
         host: slave1.example.com
+        labels:
+          - label1
+          - label2
       - name: slave2
         remotefs: /usr/local/jenkins
         host: 192.168.33.13
+        labels:
+          - label1
+          - label2
     jenkins_master_port: 8280
 ```
 

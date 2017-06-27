@@ -1,49 +1,54 @@
-require 'spec_helper'
-require 'serverspec'
+require "spec_helper"
+require "serverspec"
 
-package = 'jenkins'
-service = 'jenkins'
-user    = 'jenkins'
-group   = 'jenkins'
+package = "jenkins"
+service = "jenkins"
+user    = "jenkins"
+group   = "jenkins"
 port    = 8280
-log_file = '/var/log/jenkins/jenkins.log'
-home    = '/var/lib/jenkins'
-cli     = '/usr/bin/jenkins-cli.jar'
+log_file = "/var/log/jenkins/jenkins.log"
+home    = "/var/lib/jenkins"
+cli     = "/usr/bin/jenkins-cli.jar"
 url     = "http://127.0.0.1:#{port}/jenkins"
-plugins = ['git', 'hipchat', 'matrix-project', 'ssh-slaves']
+plugins = %w(git hipchat matrix-project ssh-slaves)
 jenkins_java_opts =
-  '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
+  "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
 jenkins_args =
   "\"--prefix=/jenkins --webroot=/usr/local/jenkins/war --httpPort=#{port}\""
-ssh_passphrase = 'passphrase'
+ssh_passphrase = "passphrase"
 ssh_checksum =
   "2048 SHA256:L5L3cuQABEnrDP+xNRz9yzAtU9cicM9O0rJTpkMWtpE\
  #{user}@#{host_inventory['fqdn']} (RSA)"
 nodes = [
-  { name: 'slave1',
-    remotefs: '/usr/local/jenkins',
-    host: 'slave1.example.com' },
-  { name: 'slave2',
-    remotefs: '/usr/local/jenkins',
-    host: '192.168.33.13' }
+  { name: "slave1",
+    remotefs: "/usr/local/jenkins",
+    host: "slave1.example.com",
+    labels: %w(label1 label2) },
+  { name: "slave2",
+    remotefs: "/usr/local/jenkins",
+    host: "192.168.33.13",
+    labels: %w(label1 label2) }
 ]
 
 case os[:family]
-when 'freebsd'
-  home    = '/usr/local/jenkins'
-  cli     = '/usr/local/bin/jenkins-cli.jar'
-  log_file = '/var/log/jenkins.log'
-when 'ubuntu'
+when "freebsd"
+  home    = "/usr/local/jenkins"
+  cli     = "/usr/local/bin/jenkins-cli.jar"
+  log_file = "/var/log/jenkins.log"
+  # TODO: workaround for #31
+  # remove this when the newer package which fixes the issue is released
+  plugins = %w(git-client hipchat matrix-project ssh-slaves)
+when "ubuntu"
   jenkins_args =
     "--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT\
  --prefix=/jenkins"
-  if Gem::Version.new(os[:release]) <= Gem::Version.new('14.04')
+  if Gem::Version.new(os[:release]) <= Gem::Version.new("14.04")
     ssh_checksum =
       "2048 27:e7:34:1a:33:48:c5:16:df:1c:ce:dc:80:78:39:5f\
   #{user}@#{host_inventory['fqdn']} (RSA)"
   end
-when 'redhat'
-  if Gem::Version.new(os[:release]) <= Gem::Version.new('7.3.1611')
+when "redhat"
+  if Gem::Version.new(os[:release]) <= Gem::Version.new("7.3.1611")
     ssh_checksum =
       "2048 27:e7:34:1a:33:48:c5:16:df:1c:ce:dc:80:78:39:5f\
   #{user}@#{host_inventory['fqdn']} (RSA)"
@@ -59,8 +64,8 @@ describe file(log_file) do
 end
 
 case os[:family]
-when 'freebsd'
-  describe file('/etc/rc.conf.d/jenkins') do
+when "freebsd"
+  describe file("/etc/rc.conf.d/jenkins") do
     it { should be_file }
     its(:content) do
       should match(
@@ -73,8 +78,8 @@ when 'freebsd'
       )
     end
   end
-when 'ubuntu'
-  describe file('/etc/default/jenkins') do
+when "ubuntu"
+  describe file("/etc/default/jenkins") do
     it { should be_file }
     its(:content) do
       should match(
@@ -88,8 +93,8 @@ when 'ubuntu'
       )
     end
   end
-when 'redhat'
-  describe file('/etc/sysconfig/jenkins') do
+when "redhat"
+  describe file("/etc/sysconfig/jenkins") do
     it { should be_file }
     its(:content) { should match(/^JENKINS_HOME="#{ Regexp.escape(home) }"$/) }
     its(:content) { should match(/^JENKINS_USER="jenkins"$/) }
@@ -215,7 +220,9 @@ nodes.each do |node|
         %r{<credentialsId>[0-9a-f]+[-0-9a-f]+[0-9a-f]+</credentialsId>}
       )
     end
-
+    node[:labels].each do |label|
+      its(:stdout) { should match(%r{<label>.*#{label}.*</label>}) }
+    end
     its(:stderr) { should match(/^$/) }
   end
 end

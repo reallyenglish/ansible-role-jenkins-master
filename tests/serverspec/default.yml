@@ -19,7 +19,13 @@
       - name: slave1
         remotefs: /usr/local/jenkins
         host: slave1.example.com
+        labels:
+          - label1
+          - label2
       - name: slave2
         remotefs: /usr/local/jenkins
         host: 192.168.33.13
+        labels:
+          - label1
+          - label2
     jenkins_master_port: 8280
