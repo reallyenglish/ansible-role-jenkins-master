@@ -1,3 +1,15 @@
+## Release 1.0.6
+
+* 71e12f4 QA
+* 1ecd793 fix comment; TODO, not XXX
+* 47d2231 fix README
+* 62732e6 QA
+* b353fb5 use git-client for FreeBSD; workaround for #31
+* 91085e9 [bugfix] add labels (fixes #28)
+* a147741 add id field to the xml (fixes #30)
+* 9eefb89 [bugfix] add no_proxy (fixes #29)
+* 7e0b2b5 QA
+
 ## Release 1.0.5
 
 * 8c3f96f [bugfix] do not log passphrase given to openssl
