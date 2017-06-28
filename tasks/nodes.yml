@@ -26,7 +26,7 @@
           <retryWaitTime>0</retryWaitTime>
           <sshHostKeyVerificationStrategy class="hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy"/>
         </launcher>
-        <label>{{ item.item.labels | join(" ") }}</label>
+        <label>{% if item.item.labels is defined %}{{ item.item.labels | join(" ") }}{% endif %}</label>
         <nodeProperties/>
       </slave>
          ' | java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ create-node  --username {{ jenkins_master_admin_user }} --password {{ jenkins_master_admin_password }}

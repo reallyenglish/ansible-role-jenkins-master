@@ -26,8 +26,7 @@ nodes = [
     labels: %w(label1 label2) },
   { name: "slave2",
     remotefs: "/usr/local/jenkins",
-    host: "192.168.33.13",
-    labels: %w(label1 label2) }
+    host: "192.168.33.13" }
 ]
 
 case os[:family]
@@ -220,8 +219,12 @@ nodes.each do |node|
         %r{<credentialsId>[0-9a-f]+[-0-9a-f]+[0-9a-f]+</credentialsId>}
       )
     end
-    node[:labels].each do |label|
-      its(:stdout) { should match(%r{<label>.*#{label}.*</label>}) }
+    if node.key?(:labels)
+      node[:labels].each do |label|
+        its(:stdout) { should match(%r{<label>.*#{label}.*</label>}) }
+      end
+    else
+      its(:stdout) { should match(%r{<label></label>}) }
     end
     its(:stderr) { should match(/^$/) }
   end
