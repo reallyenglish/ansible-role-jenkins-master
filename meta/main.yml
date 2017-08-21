@@ -23,4 +23,3 @@ galaxy_info:
     - system
 dependencies:
   - { role: reallyenglish.java }
-  - { role: reallyenglish.apt-repo, when: ansible_os_family == 'Debian' }

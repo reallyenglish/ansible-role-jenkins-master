@@ -97,8 +97,11 @@ dependencies:
 ```yaml
 - hosts: localhost
   roles:
-    - reallyenglish.java
-    - reallyenglish.apt-repo
+    - role: reallyenglish.apt-repo
+      when: ansible_os_family == "Debian"
+    - role: reallyenglish.redhat-repo
+      when: ansible_os_family == "RedHat"
+    - role: reallyenglish.java
     - ansible-role-jenkins-master
   vars_files:
     - jenkins_master_ssh_private_key.yml
@@ -108,6 +111,7 @@ dependencies:
       - matrix-project
       - git
       - hipchat
+      - ssh-slaves
     apt_repo_to_add:
       - ppa:webupd8team/java
     jenkins_master_ssh_passphrase: "passphrase"
@@ -121,9 +125,6 @@ dependencies:
       - name: slave2
         remotefs: /usr/local/jenkins
         host: 192.168.33.13
-        labels:
-          - label1
-          - label2
     jenkins_master_port: 8280
 ```
 

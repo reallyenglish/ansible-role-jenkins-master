@@ -1,3 +1,5 @@
 ---
 
 - name: reallyenglish.java
+- name: reallyenglish.apt-repo
+- name: reallyenglish.redhat-repo
