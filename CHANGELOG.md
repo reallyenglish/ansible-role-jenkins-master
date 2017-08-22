@@ -1,3 +1,9 @@
+## Release 1.0.7
+
+* 34e05fe [bugfix] make role soft-depend on apt, and redhat-repo (#38)
+* e67e851 [bugfix] QA (#37)
+* 16fc2ec [bugfix] fix failure in creating node without labels (fixes #34)
+
 ## Release 1.0.6
 
 * 71e12f4 QA
