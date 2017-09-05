@@ -11,6 +11,11 @@
     state: present
   notify: Create admin users
 
+- name: Patch rc script jenkins.patch
+  patch:
+    src: jenkins.patch
+    dest: /usr/local/etc/rc.d/jenkins
+
 - name: Create rc.conf/jenkins
   template:
     src: FreeBSD/rc.jenkins.j2

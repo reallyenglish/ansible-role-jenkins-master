@@ -229,3 +229,14 @@ nodes.each do |node|
     its(:stderr) { should match(/^$/) }
   end
 end
+
+if os[:family] == "freebsd"
+  describe file("/usr/local/etc/rc.d/jenkins") do
+    its(:content) do
+      should match(/#{Regexp.escape(">> ${jenkins_log_file}")}/)
+    end
+    its(:content) do
+      should_not match(/[^>]#{Regexp.escape("> ${jenkins_log_file}")}/)
+    end
+  end
+end
