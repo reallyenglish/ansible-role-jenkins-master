@@ -15,6 +15,7 @@
   patch:
     src: jenkins.patch
     dest: /usr/local/etc/rc.d/jenkins
+  notify: Restart jenkins
 
 - name: Create rc.conf/jenkins
   template:
