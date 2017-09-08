@@ -1,3 +1,9 @@
+## Release 1.0.8
+
+559c25f [bugfix] need to restart after applying the patch (#41)
+3ac3f8f add unit test to make sure log file is not truncated
+fe83935 [bugfix] append to log file, not truncate it
+
 ## Release 1.0.7
 
 * 34e05fe [bugfix] make role soft-depend on apt, and redhat-repo (#38)
