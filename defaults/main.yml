@@ -24,3 +24,4 @@ jenkins_master_plugins: []
 jenkins_master_ssh_private_key: ""
 jenkins_master_ssh_passphrase: ""
 jenkins_master_nodes: []
+jenkins_master_debug_log: False

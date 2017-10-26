@@ -33,7 +33,7 @@
   with_items: "{{ jenkins_master_plugins }}"
   when: jenkins_master_admin_password != ""
   register: register_install_jenkins_plugins_password
-  no_log: True
+  no_log: "{% if jenkins_master_debug_log %}False{% else %}True{% endif %}"
 
 - name: Install Jenkins plugins using password-file
   command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ install-plugin {{ item }} --username {{ jenkins_master_admin_user }} --password-file {{ jenkins_master_admin_password_file }}"
