@@ -43,6 +43,21 @@
   when: register_admin_password_file.stat.exists == True
   register: register_install_jenkins_plugins_password_file
 
+- name: Create a directory for groovy files
+  file:
+    path: "{{ jenkins_master_groovy_dir }}"
+    state: directory
+    owner: "{{ jenkins_master_user }}"
+    group: "{{ jenkins_master_group }}"
+
+- name: Copy groovy files
+  template:
+    src: "{{ item }}"
+    dest: "{{ jenkins_master_groovy_dir }}/"
+    owner: "{{ jenkins_master_user }}"
+    group: "{{ jenkins_master_group }}"
+  with_fileglob: "configure_plugins/*.groovy"
+
 - name: Restart Jenkins
   service:
     name: "{{ jenkins_master_service }}"

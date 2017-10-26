@@ -4,6 +4,7 @@ jenkins_master_service: "{{ __jenkins_master_service }}"
 jenkins_master_home: "{{ __jenkins_master_home }}"
 jenkins_master_package: "{{ __jenkins_master_package }}"
 jenkins_master_updates_dir: "{{ jenkins_master_home }}/updates"
+jenkins_master_groovy_dir: "{{ jenkins_master_home }}/groovy"
 
 jenkins_master_java_opts:
   - -Djava.awt.headless=true
