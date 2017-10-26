@@ -15,6 +15,7 @@
       - git
       - hipchat
       - ssh-slaves
+      - thinBackup
     apt_repo_to_add:
       - ppa:webupd8team/java
     jenkins_master_ssh_passphrase: "passphrase"
