@@ -240,3 +240,25 @@ if os[:family] == "freebsd"
     end
   end
 end
+
+groovy_dir = "#{home}/groovy"
+groovy_files = %w(
+  configure-hipchat.groovy
+  configure-thinBackup.groovy
+)
+
+describe file(groovy_dir) do
+  it { should be_directory }
+  it { should be_mode 755 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
+end
+
+groovy_files.each do |groovy_file|
+  describe file("#{groovy_dir}/#{groovy_file}") do
+    it { should be_file }
+    it { should be_mode 644 }
+    it { should be_owned_by user }
+    it { should be_grouped_into group }
+  end
+end
