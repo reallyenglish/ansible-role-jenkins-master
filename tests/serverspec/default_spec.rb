@@ -54,6 +54,9 @@ when "redhat"
   end
 end
 
+privatekey = "#{home}/.ssh/id_rsa"
+publickey = "#{home}/.ssh/id_rsa.pub"
+
 describe package(package) do
   it { should be_installed }
 end
@@ -133,27 +136,27 @@ describe file("#{home}/.ssh") do
   it { should be_grouped_into group }
 end
 
-describe file("#{home}/.ssh/id_rsa") do
+describe file(privatekey) do
   it { should be_file }
   it { should be_mode 600 }
   it { should be_owned_by user }
   it { should be_grouped_into group }
 end
 
-describe file("#{home}/.ssh/id_rsa.pub") do
+describe file(publickey) do
   it { should be_file }
   it { should be_mode 644 }
   it { should be_owned_by user }
   it { should be_grouped_into group }
 end
 
-describe command("ssh-keygen -lf #{home}/.ssh/id_rsa") do
+describe command("ssh-keygen -lf #{privatekey}") do
   its(:exit_status) { should eq 0 }
   its(:stdout) { should match(/^#{Regexp.escape(ssh_checksum)}$/) }
   its(:stderr) { should match(/^$/) }
 end
 
-describe command("ssh-keygen -lf #{home}/.ssh/id_rsa.pub") do
+describe command("ssh-keygen -lf #{publickey}") do
   its(:exit_status) { should eq 0 }
   its(:stdout) { should match(/^#{Regexp.escape(ssh_checksum)}$/) }
   its(:stderr) { should match(/^$/) }
@@ -161,7 +164,7 @@ end
 
 describe command(
   "ssh-keygen -p -P #{ssh_passphrase} -N #{ssh_passphrase} -f\
- #{home}/.ssh/id_rsa"
+  #{privatekey}"
 ) do
   its(:exit_status) { should eq 0 }
 end
