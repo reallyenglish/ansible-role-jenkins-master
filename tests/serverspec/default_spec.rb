@@ -163,8 +163,9 @@ describe command("ssh-keygen -lf #{publickey}") do
 end
 
 describe command(
-  "ssh-keygen -p -P #{ssh_passphrase} -N #{ssh_passphrase} -f\
-  #{privatekey}"
+  "cp -p #{privatekey} #{privatekey}.bak && ssh-keygen -p -P\
+  #{ssh_passphrase} -N #{ssh_passphrase} -f\
+  #{privatekey} && mv #{privatekey}.bak #{privatekey}"
 ) do
   its(:exit_status) { should eq 0 }
 end
