@@ -51,7 +51,7 @@
     group: "{{ jenkins_master_group }}"
 
 - name: Copy groovy files
-  template:
+  copy:
     src: "{{ item }}"
     dest: "{{ jenkins_master_groovy_dir }}/"
     owner: "{{ jenkins_master_user }}"
