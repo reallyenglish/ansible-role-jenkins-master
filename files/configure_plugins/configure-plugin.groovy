@@ -47,25 +47,30 @@ def get_config(plugin) {
 def set_config(plugin, config) {
 }
 
-if (args.length > 0) {
+def usage() {
+  println "configure-plugins.groovy (get|set) pluginname [json]"
+}
+
+if (args.length > 1) {
+  plugin_name = args[1]
   switch (args[0]) {
     case "get" :
-      println get_config(find_plugin("thinBackup"))
+      println get_config(find_plugin(plugin_name))
       break
     case "set" :
-      if (args.length > 1) {
-        set_config(find_plugin("thinBackup"), args[1])
+      if (args.length > 2) {
+        set_config(find_plugin(plugin_name), args[2])
       }
       else {
-        println "the second argument is required to configure"
+        usage()
       }
       break
     default :
-      println "the first argument must be 'get' or 'set'"
+      usage()
       break
   }
 }
 else {
-  println "argument 'get' or 'set is required"
+  usage()
 }
 // vim: ft=groovy
