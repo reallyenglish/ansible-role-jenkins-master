@@ -247,8 +247,7 @@ end
 
 groovy_dir = "#{home}/groovy"
 groovy_files = %w(
-  configure-hipchat.groovy
-  configure-thinBackup.groovy
+  configure-plugin.groovy
 )
 
 describe file(groovy_dir) do
