@@ -50,7 +50,6 @@ def flags(plugin) {
 }
 
 def get_config(plugin) {
-  def json = new JsonBuilder()
   def config = [:]
   configurables(plugin).each {
     value = plugin."get$it"()
@@ -60,11 +59,25 @@ def get_config(plugin) {
     value = plugin."is$it"()
     config["${it}"] = value
   }
-  json config
-  return json
+  return config
 }
 
-def set_config(plugin, config) {
+def set_config(plugin, config_json) {
+  def new_config = new JsonSlurper().parseText(config_json)
+  def current_config = get_config(plugin)
+  def changed_config = [:]
+  new_config.each {
+    key = it.key
+    val = it.value
+    if (current_config.containsKey(key) && (val != current_config[key])) {
+      plugin."set$key"(val)
+      changed_config[key] = val
+    }
+  }
+  if (changed_config.size() > 0) {
+    plugin.save()
+    println new JsonBuilder(changed_config)
+  }
 }
 
 def usage() {
@@ -75,7 +88,7 @@ if (args.length > 1) {
   plugin_name = args[1]
   switch (args[0]) {
     case "get" :
-      println get_config(find_plugin(plugin_name))
+      println new JsonBuilder(get_config(find_plugin(plugin_name)))
       break
     case "set" :
       if (args.length > 2) {
