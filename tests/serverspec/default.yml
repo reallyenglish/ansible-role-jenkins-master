@@ -16,6 +16,17 @@
       - hipchat
       - ssh-slaves
       - thinBackup
+    jenkins_master_plugin_configs:
+      hipchat:
+        Token: "xyz"
+        Room: "MyRoom"
+        SendAs: "Jenkins"
+        V2Enabled: true
+      thinBackup:
+        NrMaxStoredFull: 10
+        BackupPath: "/var/backup"
+        ForceQuietModeTimeout: 600
+        FullBackupSchedule: "0 0 * * *"
     apt_repo_to_add:
       - ppa:webupd8team/java
     jenkins_master_ssh_passphrase: "passphrase"
