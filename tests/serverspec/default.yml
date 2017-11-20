@@ -18,7 +18,6 @@
       - thinBackup
     jenkins_master_plugin_configs:
       hipchat:
-        Token: "xyz"
         Room: "MyRoom"
         SendAs: "Jenkins"
         V2Enabled: true
