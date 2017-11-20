@@ -58,12 +58,6 @@
     group: "{{ jenkins_master_group }}"
   with_fileglob: "configure_plugins/*.groovy"
 
-- name: Configure plugins
-  command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ -remoting groovy {{ jenkins_master_groovy_dir }}/configure-plugin.groovy set {{ item.key }} '{{ item.value | to_json }}' --username {{ jenkins_master_admin_user }} --password {{ jenkins_master_admin_password }}"
-  with_dict: "{{ jenkins_master_plugin_configs }}"
-  register: register_jenkins_master_configure_plugins
-  changed_when: register_jenkins_master_configure_plugins.stdout | length > 0
-
 - name: Restart Jenkins
   service:
     name: "{{ jenkins_master_service }}"
@@ -82,3 +76,9 @@
   when:
     - register_restart_jenkins_after_plugin is defined
     - register_restart_jenkins_after_plugin.changed
+
+- name: Configure plugins
+  command: "java -jar {{ jenkins_master_cli_path }} -s {{ jenkins_master_url }}/ -remoting groovy {{ jenkins_master_groovy_dir }}/configure-plugin.groovy set {{ item.key }} '{{ item.value | to_json }}' --username {{ jenkins_master_admin_user }} --password {{ jenkins_master_admin_password }}"
+  with_dict: "{{ jenkins_master_plugin_configs }}"
+  register: register_jenkins_master_configure_plugins
+  changed_when: register_jenkins_master_configure_plugins.stdout | length > 0
