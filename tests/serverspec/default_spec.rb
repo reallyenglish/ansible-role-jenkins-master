@@ -246,6 +246,19 @@ groovy_dir = "#{home}/groovy"
 groovy_files = %w(
   configure-plugin.groovy
 )
+configure_plugins = {
+  "hipchat" => {
+    "Room" => "MyRoom",
+    "SendAs" => "Jenkins",
+    "V2Enabled" => true
+  },
+  "thinBackup" => {
+    "NrMaxStoredFull" => 10,
+    "BackupPath" => "/var/backup",
+    "ForceQuietModeTimeout" => 600,
+    "FullBackupSchedule" => "0 0 * * *"
+  }
+}
 
 describe file(groovy_dir) do
   it { should be_directory }
@@ -260,5 +273,23 @@ groovy_files.each do |groovy_file|
     it { should be_mode 644 }
     it { should be_owned_by user }
     it { should be_grouped_into group }
+  end
+end
+
+configure_plugins.each do |plugin, configs|
+  jsonfile = "/tmp/configure-#{plugin}.json"
+  describe command(
+    "java -jar #{cli} -s #{url} -remoting groovy\
+  #{groovy_dir}/configure-plugin.groovy get #{plugin}\
+   --username admin --password password > #{jsonfile}"
+  ) do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should match(/^$/) }
+  end
+
+  describe file(jsonfile) do
+    configs.each do |k, v|
+      its(:content_as_json) { should include(k => v) }
+    end
   end
 end
