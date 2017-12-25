@@ -10,7 +10,7 @@ log_file = "/var/log/jenkins/jenkins.log"
 home    = "/var/lib/jenkins"
 cli     = "/usr/bin/jenkins-cli.jar"
 url     = "http://127.0.0.1:#{port}/jenkins"
-plugins = %w(git hipchat matrix-project ssh-slaves)
+plugins = %w[git hipchat matrix-project ssh-slaves]
 jenkins_java_opts =
   "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
 jenkins_args =
@@ -23,7 +23,7 @@ nodes = [
   { name: "slave1",
     remotefs: "/usr/local/jenkins",
     host: "slave1.example.com",
-    labels: %w(label1 label2) },
+    labels: %w[label1 label2] },
   { name: "slave2",
     remotefs: "/usr/local/jenkins",
     host: "192.168.33.13" }
@@ -36,7 +36,7 @@ when "freebsd"
   log_file = "/var/log/jenkins.log"
   # TODO: workaround for #31
   # remove this when the newer package which fixes the issue is released
-  plugins = %w(git-client hipchat matrix-project ssh-slaves)
+  plugins = %w[git-client hipchat matrix-project ssh-slaves]
 when "ubuntu"
   jenkins_args =
     "--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT\

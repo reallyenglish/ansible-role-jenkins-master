@@ -19,7 +19,6 @@
     owner: "{{ jenkins_master_user }}"
     group: "{{ jenkins_master_group }}"
     mode: 0644
-  when: register_update_json.changed
 
 - name: Check if we're using a password file for authentication
   stat:
